@@ -4,9 +4,47 @@ import requests
 from django.shortcuts import render
 from django.conf import settings
 from isodate import parse_duration  
+from pprint import PrettyPrinter
+
+
+# Calling API using 
+# Documentation https://medium.com/daily-python/python-script-to-consume-the-omdb-api-daily-python-15-aa9457f6d090
+# http://www.omdbapi.com/
+def callingimdbAPI():
+    printer = PrettyPrinter()
+    
+    url = 'http://www.omdbapi.com/?apikey='+settings.OMDB_API_KEY
+    year = ''
+    movietitle = 'Golmaal'
+    inputData = {
+        's':movietitle,
+        'type':'movie',
+        'y':year
+    }
+
+    response = requests.get(url,params=inputData).json()
+    #print(response['Search'][0]['imdbID'])
+    
+    imdbID = response['Search'][0]['imdbID']
+    #Call API Based on IMDB ID 
+    getDataOnImdbID(imdbID)
+
+def getDataOnImdbID(imdbID):
+    printer = PrettyPrinter()
+    url = 'http://www.omdbapi.com/?apikey='+settings.OMDB_API_KEY
+    inputData = {
+        'i':imdbID
+    }
+    response = requests.get(url,params=inputData).json()
+
+    printer.pprint(response)
+
+
+
 
 # Create your views here.
 def displayHome(request):
+    callingimdbAPI()
     listofVidIDs = []
     listofVidResult = []
     if request.method == 'POST':
@@ -73,4 +111,3 @@ def displayHome(request):
     return render(request,'searchingytvid/home.html',passtoView)
  
 
-    

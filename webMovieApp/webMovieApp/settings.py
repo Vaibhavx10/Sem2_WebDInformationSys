@@ -38,11 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'searchingytvid.apps.SearchingytvidConfig',
+    'rest_framework',
+    'corsheaders',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -76,8 +80,12 @@ WSGI_APPLICATION = 'webMovieApp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME':'movie_webapp',
+        'USER':'root',
+        'PASSWORD':'root',
+        'HOST':'127.0.0.1',
+        'PORT':'3306'
     }
 }
 
@@ -126,3 +134,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Youtube API Key 
 YT_API_KEY = 'AIzaSyBFbHPEsWjDhlLr_GEM1LbNfav_F0ylcNA'
+
+#Rapid app api key to get the movie list from imdb website which is avaliable for free
+#Not in use as of now
+RAPID_API_KEY='7c28032148msh5b4059cd97b823fp1bad0fjsnc9c000540847'
+
+#http://www.omdbapi.com/
+OMDB_API_KEY='ebd7a458'
+
+
+#Specifying which model to use for user related stuff 
+AUTH_USER_MODEL = 'users.User'
+
+#To enable all ports of frontEnd to access our application
+CORS_ORIGIN_ALLOW_ALL = True
+
+#Since we are using cookies 
+# it is set true so that the front end will get those cookies and 
+# then create a login innitation 
+CORS_ALLOW_CREDENTIALS = True
