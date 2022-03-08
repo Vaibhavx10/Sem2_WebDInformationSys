@@ -1,4 +1,6 @@
+{% comment %} {% extends 'searchingytvid/boilerplate_header.html' %} {% endcomment %}
 {% load static %}
+
 
 <!doctype html>
 <html lang="en">
@@ -8,7 +10,8 @@
     <title>Search YouTube</title>
 
     <!-- Bootstrap core CSS -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
 
     <style>
@@ -28,48 +31,98 @@
       }
     </style>
     <!-- Custom styles for this template -->
-    <link href='{% static 'searchingytvid/homeStyle.css' %}' rel="stylesheet">
+    {% comment %} <link href='{% static 'searchingytvid/homeStyle.css' %}' rel="stylesheet"> {% endcomment %}
+    
   </head>
   <body>
-
-<main role="main">
-
-  <section class="jumbotron text-center">
     <div class="container">
-      <h1 class="jumbotron-heading">Search YouTube</h1>
-      <form action="" method="POST">
-      <div class="input-group mb-3">
-          {% csrf_token %}
-          <input type="text" name="ytsearch" class="form-control" aria-label="Username">
+      <div class="row justify-content-center">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Navbar scroll</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarScroll">
+            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Link
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Link</a>
+              </li>
+            </ul>
+            <form class="d-flex">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+      </nav>
       </div>
-      <button href="#" type="submit" class="btn btn-primary my-2">YouTube Searching </button>
-    </form>
     </div>
-  </section>
 
-  <div class="album py-5 bg-light">
     <div class="container">
-      <div class="row">
-         {% for vid in videos %} 
-          <div class="col-md-4">
-            <div class="card mb-4 shadow-sm">
-              <img class="bd-placeholder-img card-img-top" width="100%" height="225" src={{vid.thumbnails}} preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"></img>
-              <div class="card-body">
-                <p class="card-text">Video title for loop</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="btn-group">
-                    <a type="button" href="{{ vid.url }}" class="btn btn-sm btn-outline-secondary">Hommiiee </a>
-                  </div>
-                  <small class="text-muted">{{ vid.totaltimeinMinutes}} mins</small>
-                </div>
+      <div class="row justify-content-center">
+        <main role="main">
+          <section class="jumbotron text-center">
+            <div class="main-container text-center">
+              <h1 class="jumbotron-heading">Search YouTube</h1>
+              <form action="displatytsearchresult" method="POST">
+              <div class="input-group mb-3">
+                  {% csrf_token %}
+                  <input type="text" name="ytsearch" class="form-control" aria-label="Username">
+              </div>
+              <button href="#" type="submit" class="btn btn-primary my-2">YouTube Searching </button>
+            </form>
+            </div>
+          </section>
+        
+          <div class="album py-5 bg-light">
+            <div class="main-container text-center">
+              <div class="row">
+                {% comment %} {% if videos not in 'FAIL' %} {% endcomment %}
+                  {% for vid in videos %} 
+                    <div class="col-md-4">
+                      <div class="card mb-4 shadow-sm">
+                        <img class="bd-placeholder-img card-img-top" width="100%" height="225" src={{vid.thumbnails}} preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"></img>
+                        <div class="card-body">
+                          <p class="card-text">Video title for loop</p>
+                          <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                              <a type="button" href="{{ vid.url }}" class="btn btn-sm btn-outline-secondary">Hommiiee </a>
+                            </div>
+                            <small class="text-muted">{{ vid.totaltimeinMinutes}} mins</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                  {% comment %} {% else %}
+                      <div>
+                        {{videos}}
+                      </div>
+                {% endif %} {% endcomment %}
               </div>
             </div>
           </div>
-         {% endfor %}
-      </div>
+        </main>
     </div>
-  </div>
 
-</main>
+
 </body>
 </html>

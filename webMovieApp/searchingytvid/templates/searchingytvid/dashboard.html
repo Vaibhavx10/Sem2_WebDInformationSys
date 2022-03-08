@@ -1,0 +1,197 @@
+{% load static %}
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <title>Search YouTube</title>
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <!-- Jquery CDN  -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .checked {
+            color: orange;
+        <style>
+      </style>
+    
+  </head>
+  <body>
+
+
+
+    <div class="container">
+      <div class="row justify-content-center">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Navbar scroll</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarScroll">
+            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/getDashboardPageonUserID?uname={{uemail}}&uid={{userid}}">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Link
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Link</a>
+              </li>
+            </ul>
+            <form class="d-flex">
+                <p class="btn btn-outline-success" type="submit">Welcome {{uemail}} !! </p>
+            </form> 
+          </div>
+        </div>
+      </nav>
+      </div>
+    </div>
+
+
+    {% comment %} this just for pass by and rendering to diffrent parts {% endcomment %}
+    <div>
+      <input type="hidden"  id="jwtcookie" value="{{jwtcookie}}" />
+      <input type="hidden"  id="uemail" value="{{uemail}}" />
+      <input type="hidden"  id="userid" value="{{userid}}" />
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+    
+    
+      <div class="album py-5 bg-light">
+        <div class="main-container">
+          <div class="row">
+            {% for vid in videos %} 
+              <div class="col-md-3">
+                <div class="card mb-3 shadow-sm">
+                  <img class="bd-placeholder-img card-img-top" height="400px" src={{vid.image.original}} preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"></img>
+                  <div class="card-body">
+                    <p class="font-monospace card-text text-center">Name : {{vid.name}}</p>
+                    <p class="font-monospace card-text">Genres : {{vid.genres}}</p>
+                    <div class="row">
+                        <p class="font-monospace">Ratting {{ vid.rating.average}}</p>
+                    </div>
+                    <div class="row">
+                        <p class="font-monospace">Country : {{ vid.network.country.name}}</p>
+                    </div>
+                    <div class="row">
+                        <p class="font-monospace">Type : {{ vid.type}}</p>
+                    </div>
+
+                    <div class="row">
+                        <p class="font-monospace">RunTime : {{ vid.runtime}} mins</p>
+                    </div>
+                    
+                    <div class="container">
+                        <div class="row">
+                          <div class="col">
+                            <form  action="displatytsearchresult" method="post">
+                              {% csrf_token %}
+                              <input type="hidden" name="ytsearch" value="{{vid.name}}" />
+                                  <div class="col btn-group">
+                                      <button class="btn btn-md btn-danger" type="submit"> Youtube </button>
+                                  </div>
+                              </form>    
+                          </div>
+
+                          <div class="col">
+                            <form  action="moreInfo" method="post">
+                              {% csrf_token %}
+                              <input type="hidden" name="moreInfo_imdbid" value="{{vid.externals.imdb}}" />
+                              <input type="hidden" name="moreInfo_vidname" value="{{vid.name}}" />
+                              <input type="hidden" name="moreInfo_uemail" value="{{uemail}}" />
+                              <input type="hidden" name="moreInfo_userid" value="{{userid}}" />
+                                <div class="col btn-group">
+                                    <button type="submit" 
+                                    class="btn btn-md btn-outline-secondary">More Info 
+                                </button>
+                                </div>
+                              </form>    
+                            </div>      
+                        </div>
+                    </div>
+
+
+
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      {% comment %} new stuff is here {% endcomment %}
+
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="album py-5 bg-light">
+            <div class="main-container">
+              <div class="row" id='userbased_Content'>
+      
+      
+      
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+  
+      {% comment %} new stuff ends {% endcomment %}
+
+   
+
+ 
+
+
+
+<script>
+
+    function searchOnYoutube(ytsearch){
+        $.ajax({
+            url: '/displatytsearchresult',
+            async: true,
+            dataType: 'json',        
+            type: 'POST',
+            data:{
+                  'ytsearch':ytsearch,
+                  'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function (data) {
+                alert(data)
+              } , error: function () {
+                alert("error");
+              }
+            }
+          )
+          
+          return false;
+    }
+
+
+  </script>
+
+</body>
+</html>

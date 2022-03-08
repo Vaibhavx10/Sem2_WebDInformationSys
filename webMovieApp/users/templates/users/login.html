@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Login Page</title>
+  </head>
+  <body>
+    
+    <style type="text/css">
+      #loginauth{
+        display: none;
+      }
+    </style>
+
+
+    <form action="loginApi" method="post">
+      <div class="container card col-lg-6">
+          <div class="row card-body">
+            <h2 class="text-center"> Login Page </h2>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">UserName</span>
+                <input type="text" class="form-control" id="uname" name="uemail" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+              </div>
+
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Password</span>
+                <input type="Password" class="form-control" id="upass" name="upass" placeholder="Username" 
+                aria-label="Username" aria-describedby="basic-addon1">
+              </div>  
+          </div>
+
+          <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+            <button type="Submit" class="btn btn-outline-primary" for="btnradio1">Submit</button>
+        </div>
+        
+        <div class="container text-center" id="loginauth" style={{display}}>
+          Just a check {{messages}}
+        </div>
+      </div>
+    </form>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>
