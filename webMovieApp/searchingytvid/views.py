@@ -63,75 +63,64 @@ def returnYTSearchPage(request):
     return render(request,'searchingytvid/home.html')
 
 
-# Create your views here.
-def displayHome(request):
-    #callingimdbAPI()
+
+
+def getYoutubeResultsOnSearch(ytsearch):
     listofVidIDs = []
     listofVidResult = []
-    listofChannel = []
-    if request.method == 'POST':
-        yt_searching_url = 'https://www.googleapis.com/youtube/v3/search'
-        yt_videos_url = 'https://www.googleapis.com/youtube/v3/videos'
+    yt_searching_url = 'https://www.googleapis.com/youtube/v3/search'
+    yt_videos_url = 'https://www.googleapis.com/youtube/v3/videos'
 
 
-        inputs = {
+    inputs = {
             'part':'snippet',
-            'q':request.POST['ytsearch'],
+            'q':ytsearch,
             'key' : settings.YT_API_KEY,
             'safeSearch':'strict',
             'maxResults':9
-        }
-
-
-
-        searchresults = requests.get(yt_searching_url,params=inputs)
-
-
-
-        fetchedresults = searchresults.json()['items']
-        # print(fetchedresults)
-
-        #Creating for loop to get all the video IDs
-        #Need to fix the nothing found error
-        for fr in fetchedresults:
-                #  if 'videoId' in fetchedresults:
-                     print(fr['id']['videoId'])
-                     listofVidIDs.append(fr['id']['videoId'])
-
-
-
-
-
-        videos_input_param = {
-            'part':'snippet,contentDetails',
-            'key' : settings.YT_API_KEY,
-            'id' : ','.join(listofVidIDs),
-            'type':'video',
-            'maxResults':9
-        }
-
-        channel_input_param = {
-            'part':'snippet,contentDetails',
-            'key' : settings.YT_API_KEY,
-            'id' : ','.join(listofChannel),
-            'type':'video',
-            'maxResults':9
-        }
-
-        videosresults = requests.get(yt_videos_url,params=videos_input_param)
-
-        itemsofvideosresults = videosresults.json()['items']
-
-        for data in itemsofvideosresults:
-            v_dict = {
-                'title' : data['snippet']['title'],
-                'id': data['id'],
-                'url':f'https://www.youtube.com/watch?v={ data["id"] }',
-                'totaltimeinMinutes': parse_duration(data['contentDetails']['duration']).total_seconds() // 60,
-                'thumbnails':data['snippet']['thumbnails']['high']['url']
             }
 
-            listofVidResult.append(v_dict)
+
+
+    searchresults = requests.get(yt_searching_url,params=inputs)
+
+
+
+    fetchedresults = searchresults.json()['items']
+    print("\n \n fetchedresults >> ",fetchedresults)
+
+    #Creating for loop to get all the video IDs
+    #Need to fix the nothing found error
+    for fr in fetchedresults:
+            #   if 'id' in fetchedresults:
+                    listofVidIDs.append(fr['id'].get('videoId',''))
+
+
+
+
+
+    videos_input_param = {
+        'part':'snippet,contentDetails',
+        'key' : settings.YT_API_KEY,
+        'id' : ','.join(listofVidIDs),
+        'type':'video',
+        'maxResults':9
+    }
+
+    videosresults = requests.get(yt_videos_url,params=videos_input_param)
+
+    itemsofvideosresults = videosresults.json()['items']
+
+    for data in itemsofvideosresults:
+        v_dict = {
+            'title' : data['snippet']['title'],
+            'id': data['id'],
+            'url':f'https://www.youtube.com/watch?v={ data["id"] }',
+            'totaltimeinMinutes': parse_duration(data['contentDetails']['duration']).total_seconds() // 60,
+            'thumbnails':data['snippet']['thumbnails']['high']['url']
+        }
+
+        listofVidResult.append(v_dict)
 
 
     print(" >> ",len(listofVidResult))
@@ -143,7 +132,90 @@ def displayHome(request):
         passtoView = {
             'videos': "FAIL"
         }
+    return passtoView
+    
 
+
+
+# Create your views here.
+
+class displatytsearchresultfor_home(APIView):
+    def post(self,request):    
+        passtoView = getYoutubeResultsOnSearch(request.POST['ytsearch'])
+        
+        #if request.method == 'POST':
+        #     listofVidIDs = []
+        #     listofVidResult = []
+        #     yt_searching_url = 'https://www.googleapis.com/youtube/v3/search'
+        #     yt_videos_url = 'https://www.googleapis.com/youtube/v3/videos'
+
+
+        #     inputs = {
+        #         'part':'snippet',
+        #         'q':request.POST['ytsearch'],
+        #         'key' : settings.YT_API_KEY,
+        #         'safeSearch':'strict',
+        #         'maxResults':9
+        #     }
+
+
+
+        #     searchresults = requests.get(yt_searching_url,params=inputs)
+
+
+
+        #     fetchedresults = searchresults.json()['items']
+        #     print("\n \n fetchedresults >> ",fetchedresults)
+
+        #     #Creating for loop to get all the video IDs
+        #     #Need to fix the nothing found error
+        #     for fr in fetchedresults:
+        #             #   if 'id' in fetchedresults:
+        #                     listofVidIDs.append(fr['id'].get('videoId',''))
+
+
+
+
+
+        #     videos_input_param = {
+        #         'part':'snippet,contentDetails',
+        #         'key' : settings.YT_API_KEY,
+        #         'id' : ','.join(listofVidIDs),
+        #         'type':'video',
+        #         'maxResults':9
+        #     }
+
+        #     videosresults = requests.get(yt_videos_url,params=videos_input_param)
+
+        #     itemsofvideosresults = videosresults.json()['items']
+
+        #     for data in itemsofvideosresults:
+        #         v_dict = {
+        #             'title' : data['snippet']['title'],
+        #             'id': data['id'],
+        #             'url':f'https://www.youtube.com/watch?v={ data["id"] }',
+        #             'totaltimeinMinutes': parse_duration(data['contentDetails']['duration']).total_seconds() // 60,
+        #             'thumbnails':data['snippet']['thumbnails']['high']['url']
+        #         }
+
+        #         listofVidResult.append(v_dict)
+
+
+        # print(" >> ",len(listofVidResult))
+        # if len(listofVidResult) > 1:
+        #     passtoView = {
+        #         'videos': listofVidResult
+        #     }
+        # else:
+        #     passtoView = {
+        #         'videos': "FAIL"
+        #     }
+
+        #return render(request,'searchingytvid/home.html',passtoView)
+        return Response(passtoView,status=status.HTTP_200_OK)
+
+def displatytsearchresult(request):
+    passtoView = getYoutubeResultsOnSearch(request.POST['ytsearch'])
     return render(request,'searchingytvid/home.html',passtoView)
 
 
@@ -188,6 +260,7 @@ def getDashboardPageonUserID(request):
 
 
 
+
 def moreInfo(request):
     #Need to call moreInfo Page
     imdbid = request.POST['moreInfo_imdbid']
@@ -213,17 +286,26 @@ def moreInfo(request):
 class addSubscriptionInDB(APIView):
     def post(self,request):
         print(">> addSubscriptionInDB >> ",request)
-        print(">> addSubscriptionInDB >> ",request.data)
+        print(">> addSubscriptionInDB >> ",request.data['imdbid'])
+        print(">> addSubscriptionInDB >> ",request.data['userid'])
+        
+        data = UsersSubscription.objects.filter(userid=request.data['userid'],imdbid=request.data['imdbid']) 
+        usrandimdbCount = userssubscriptionSerializers(data,many=True)
 
-        serializer = userssubscriptionSerializers(data=request.data)
-        if serializer.is_valid():
-            serializer.is_valid(raise_exception=True)
-            print(serializer.errors)
-            serializer.save()
-            return Response(request.data, status=status.HTTP_200_OK)
+        print("addSubscriptionInDB >> ", len(usrandimdbCount.data))
+
+        if len(usrandimdbCount.data) < 1:
+            serializer = userssubscriptionSerializers(data=request.data)
+            if serializer.is_valid():
+                serializer.is_valid(raise_exception=True)
+                print(serializer.errors)
+                serializer.save()
+                return Response(request.data, status=status.HTTP_200_OK)
+            else:
+                print("PRINTED ERROR ", serializer.errors)
+                return Response(request.data, status=status.HTTP_200_OK)
         else:
-            print("PRINTED ERROR ", serializer.errors)
-        return Response(request.data, status=status.HTTP_200_OK)
+             return Response(request.data, status=status.HTTP_404_NOT_FOUND)       
         
 
 # using userId get list of imdbIDs which he has subscribed and from that list get

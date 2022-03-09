@@ -1,5 +1,5 @@
 function subscribe(){
-    alert("lets Subscribe !! ")
+    
 
     userid = $('#userid').val();
     imdbid = $('#imdbID').val();
