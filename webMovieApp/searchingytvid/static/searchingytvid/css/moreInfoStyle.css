@@ -5,9 +5,11 @@
     cursor: pointer;
 }
 
-#idytbtn {
-border: none;
-outline: none;
-background: none;
-cursor: pointer;
+.checked {
+    color: orange;
+}
+
+#posterimage {
+    height: 450px;
+    width: 364px;
 }

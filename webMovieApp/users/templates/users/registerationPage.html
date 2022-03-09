@@ -11,8 +11,75 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title>Register</title>
+    <style>
+
+      #iddashbtn {
+        border: none;
+        outline: none;
+        background: none;
+        cursor: pointer;
+    }
+    </style>
   </head>
   <body>
+
+
+{% comment %} header section starts {% endcomment %}
+<div class="container">
+  <div class="row justify-content-center">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+          
+          <li class="nav-item">
+            <form  action="/getDashboardPageonUserID" method="post">
+              <button class="nav-link active shadow-none border-none" 
+                  id="iddashbtn" aria-current="page" type="submit">Dashboard</button>
+              {% csrf_token %}
+              <input type="hidden" name="dash_uname" value="{{uemail}}" />
+              <input type="hidden" name="dash_userid" value="{{userid}}" />
+            </form>  
+          </li>
+
+          <li class="nav-item">
+            <form  action="/" method="get">
+              <button class="nav-link active shadow-none border-none" 
+                  id="iddashbtn" aria-current="page" type="submit">Search on YouTube</button>
+                  
+            </form>  
+          </li>
+
+          <li class="nav-item">
+            <form  action="/users/registerationPage" method="">
+              <button class="nav-link active shadow-none border-none" 
+                  id="iddashbtn" aria-current="page" type="submit">Register New User</button>
+              {% csrf_token %}
+            </form>  
+          </li>
+
+          <li class="nav-item">
+            <form  action="/users/loginPage" method="">
+              <button class="nav-link active shadow-none border-none" 
+                  id="iddashbtn" aria-current="page" type="submit">Login</button>
+              {% csrf_token %}
+            </form>  
+          </li>
+          
+
+        </ul>
+        <form class="d-flex">
+            <p class="btn btn-outline-success" type="submit">Welcome {{uemail}} !! </p>
+        </form> 
+      </div>
+    </div>
+  </nav>
+  </div>
+</div>
+
+
+{% comment %} header section ends {% endcomment %}
+
     <div class="container card ">
         <h2 class="text-center"> Registeration Page</h2>
         <div class="row card-body">

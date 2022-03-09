@@ -40,38 +40,50 @@
       <div class="row justify-content-center">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Navbar scroll</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
           <div class="collapse navbar-collapse" id="navbarScroll">
             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+              
               <li class="nav-item">
-                {% comment %} <a class="nav-link active" aria-current="page" onclick="getDashboardPageonUserID()">Dashboard</a> {% endcomment %}                                
                 <form  action="/getDashboardPageonUserID" method="post">
-                  <button class="nav-link active shadow-none border-none" id="iddashbtn"aria-current="page" type="submit">Dashboard</button>
+                  <button class="nav-link active shadow-none border-none" 
+                      id="iddashbtn" aria-current="page" type="submit">Dashboard</button>
                   {% csrf_token %}
                   <input type="hidden" name="dash_uname" value="{{uemail}}" />
                   <input type="hidden" name="dash_userid" value="{{userid}}" />
                 </form>  
               </li>
+
               <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <form  action="/" method="get">
+                  <button class="nav-link active shadow-none border-none" 
+                      id="iddashbtn" aria-current="page" type="submit">Search on YouTube</button>
+                      
+                </form>  
               </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Link
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-              </li>
+
               <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Link</a>
+                <form  action="/users/registerationPage" method="">
+                  <button class="nav-link active shadow-none border-none" 
+                      id="iddashbtn" aria-current="page" type="submit">Register New User</button>
+                  {% csrf_token %}
+                </form>  
               </li>
+
+              <li class="nav-item">
+                <form  action="/users/loginPage" method="">
+                  <button class="nav-link active shadow-none border-none" 
+                      id="iddashbtn" aria-current="page" type="submit">Login</button>
+                  {% csrf_token %}
+                </form>  
+              </li>
+
+              <li class="nav-item">
+                  <button class="nav-link active shadow-none border-none" 
+                      id="iddashbtn" aria-current="page" onclick="logout()" type="submit">Logout</button>
+                  {% csrf_token %}
+              </li>
+              
+
             </ul>
             <form class="d-flex">
                 <p class="btn btn-outline-success" type="submit">Welcome {{uemail}} !! </p>
@@ -83,6 +95,12 @@
     </div>
 
 
+
+    
+
+
+
+
     {% comment %} this just for pass by and rendering to diffrent parts {% endcomment %}
     <div>
       <input type="hidden"  id="jwtcookie" value="{{jwtcookie}}" />
@@ -91,6 +109,8 @@
     </div>
 
     <div class="container">
+
+
         <div class="row justify-content-center">
 
         <div class="container">
@@ -117,7 +137,11 @@
 
 
 <script>
+  function logout(){
+          document.cookie = "csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          window.location.href = "/users/loginPage"
+    }
 </script>
 
 </body>
-</html>
+</html> 
