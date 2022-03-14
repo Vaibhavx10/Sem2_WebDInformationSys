@@ -25,63 +25,92 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
   </head>
-  <body>
-      {% comment %} header section starts {% endcomment %}
-      <div class="container">
-        <div class="row justify-content-center">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navbarScroll">
-              <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-                
-                <li class="nav-item">
-                  <form  action="/getDashboardPageonUserID" method="post">
-                    <button class="nav-link active shadow-none border-none" 
-                        id="iddashbtn" aria-current="page" type="submit">Dashboard</button>
-                    {% csrf_token %}
-                    <input type="hidden" name="dash_uname" value="{{uemail}}" />
-                    <input type="hidden" name="dash_userid" value="{{userid}}" />
-                  </form>  
-                </li>
-  
-                <li class="nav-item">
-                  <form  action="/" method="get">
-                    <button class="nav-link active shadow-none border-none" 
-                        id="iddashbtn" aria-current="page" type="submit">Search on YouTube</button>
-                        
-                  </form>  
-                </li>
-  
-                <li class="nav-item">
-                  <form  action="/users/registerationPage" method="">
-                    <button class="nav-link active shadow-none border-none" 
-                        id="iddashbtn" aria-current="page" type="submit">Register New User</button>
-                    {% csrf_token %}
-                  </form>  
-                </li>
-  
-                <li class="nav-item">
-                  <form  action="/users/loginPage" method="">
-                    <button class="nav-link active shadow-none border-none" 
-                        id="iddashbtn" aria-current="page" type="submit">Login</button>
-                    {% csrf_token %}
-                  </form>  
-                </li>
-                
-  
-              </ul>
-              <form class="d-flex">
-                  <p class="btn btn-outline-success" type="submit">Welcome {{uemail}} !! </p>
-              </form> 
-            </div>
-          </div>
-        </nav>
-        </div>
-      </div>
-  
-    {% comment %} header section ends {% endcomment %}
+  <body style="background-color: black;">
+    {% comment %} header section starts {% endcomment %}
+ <div class="container">
+   
+  <div class="row justify-content-center"> 
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="iddashbtn navbar-brand text-center" href="#">Navbar</a>
+      
+      <button onclick="toggleNavbar()" class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+          data-bs-target="#navbarScroll" aria-controls="navbarScroll" 
+          aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <div class="container card mb-3 shadow-sm">
+      <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" 
+        style="--bs-scroll-height: 100px;">
+          
+          <li class="nav-item">
+            <form  action="/getDashboardPageonUserID" method="post">
+              <button class="iddashbtn nav-link active shadow-none border-none" 
+                  id="" aria-current="page" type="submit">Dashboard</button>
+              {% csrf_token %}
+              <input type="hidden" name="dash_uname" value="{{uemail}}" />
+              <input type="hidden" name="dash_userid" value="{{userid}}" />
+            </form>  
+          </li>
+
+          <li class="nav-item">
+            <form  action="/" method="get">
+              <button class="nav-link active rounded-top border border-danger" 
+                  id="ytbtn" aria-current="page" type="submit">Search on YouTube</button>
+                  
+            </form>  
+          </li>
+
+          <li class="nav-item">
+            <form  action="/users/registerationPage" method="">
+              <button class="iddashbtn nav-link active shadow-none border-none" 
+                  id="" aria-current="page" type="submit">Register</button>
+              {% csrf_token %}
+            </form>  
+          </li>
+
+          {% if uemail %}
+          <li class="nav-item">
+            <form  action="/returnSubscriberDashboardPage" method="POST">
+              {% csrf_token %}
+              <button class="iddashbtn nav-link active shadow-none border-none" 
+                  id="" aria-current="page" type="submit">Subscriber</button>
+                  <input type="hidden" name="sub_uname" value="{{uemail}}" />
+                  <input type="hidden" name="sub_userid" value="{{userid}}" />
+            </form>  
+          </li>
+          {% endif %} 
+
+
+          <li class="nav-item">
+            <form  action="/users/loginPage" method="">
+              <button class="iddashbtn nav-link active shadow-none border-none" 
+                  id="" aria-current="page" type="submit">Login</button>
+              {% csrf_token %}
+            </form>  
+          </li>
+          
+          <li class="nav-item">
+            <button class="iddashbtn nav-link active shadow-none border-none" onclick="logout()"
+                id="" aria-current="page" >Logout</button>
+          </li>
+
+        </ul>
+         <div id="userheader">
+            <p class="btn btn-outline-success" type="submit">Welcome {{uemail}} !! </p>
+        </div>  
+      </div>
+    </div>
+  </nav>
+  </div>
+</div> 
+{% comment %} header section ends {% endcomment %}
+
+    
+    
+
+    <div class="container card mb-3 shadow-sm" id="moreInfoText">
         <div class="row justify-content-center">
             <div class="clearfix col-lg-12">
                 <img style="height: 450px; width: 364px;"
@@ -126,6 +155,10 @@
                         <dt class="col-sm-3">Total Seasons :</dt>
                         <dd class="col-sm-9">{{meta.totalSeasons}}</dd>
 
+                        
+                        <dt class="col-sm-3">Pricing :</dt>
+                        <dd class="col-sm-9 text-danger">1 Euro Per month Charges will be applied</dd>
+
 
                         <input type="hidden"  id="imdbID" value="{{meta.imdbID}}" />
                         <input type="hidden"  id="userid" value="{{userID}}" />
@@ -137,21 +170,38 @@
               </div>
             </div>
 
-            <div class="container col-lg-12 text-center">
+            <div class="container col-lg-12 text-center" >
               {% if uemail %}
-              <div class="btn-group" role="group" aria-label="Basic example">
+              <div class="btn-group" role="group" aria-label="Basic example" >
                 <button type="button" onclick="subscribe()" class="btn btn-primary">Subscribe</button>
               </div>
               {% endif %}
             </div>
+
+
+        <div class="container card" id="errorcnt" >
+            <div class="card-body" id= "errorMessage">
+                
+            </div>
         </div>
+
+        </div>
+
+
+        
+       
+
 
         
 </div>
 
 
 <script>
-</script
+  function logout(){
+          document.cookie = "csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          window.location.href = "/users/loginPage"
+    }
+</script>
 
 </body>
 </html>

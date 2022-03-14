@@ -1,11 +1,25 @@
-.checked {
-    color: orange;
+label {
+    display: flex;
+    align-items: center;
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+    font-family: cursive;
+  }
+
+
+
+
+#regPage {
+    font-size: 2.8rem;
+    font-family: 'Kaushan Script', cursive;
+    color: #ed0707;
+}  
+
+body{
+    background-color: black;
 }
 
-#posterimage {
-    height: 450px;
-    width: 364px;
-}
+
 
 .iddashbtn {
     border: none;
@@ -37,22 +51,4 @@
 #userheader{
     font-size: 1.8rem;
     font-family: 'Kaushan Script', cursive;
-}
-
-#moreInfoText{
-    font-size: 1.5rem;
-    margin-bottom: 0.8rem;
-    font-family: cursive;   
-}
-
-#btnsubmit{
-    margin-bottom: 30px;
-}
-
-
-#errorcnt {
-    display: none;
-    margin-top: 13px;
-    margin-bottom: 10px;
-    background-color: #323030;
 }

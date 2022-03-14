@@ -32,67 +32,88 @@
       </style>
     
   </head>
-  <body  onload="initialize()">
+  <body  onload="initialize()" style="background-color: black;">
+{% comment %} header section starts {% endcomment %}
+<div class="container">
+   
+  <div class="row justify-content-center"> 
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="iddashbtn navbar-brand text-center" href="#">Navbar</a>
+      
+      <button onclick="toggleNavbar()" class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+          data-bs-target="#navbarScroll" aria-controls="navbarScroll" 
+          aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" 
+        style="--bs-scroll-height: 100px;">
+          
+          <li class="nav-item">
+            <form  action="/getDashboardPageonUserID" method="post">
+              <button class="iddashbtn nav-link active shadow-none border-none" 
+                  id="" aria-current="page" type="submit">Dashboard</button>
+              {% csrf_token %}
+              <input type="hidden" name="dash_uname" value="{{uemail}}" />
+              <input type="hidden" name="dash_userid" value="{{userid}}" />
+            </form>  
+          </li>
+
+          <li class="nav-item">
+            <form  action="/" method="get">
+              <button class="nav-link active rounded-top border border-danger" 
+                  id="ytbtn" aria-current="page" type="submit">Search on YouTube</button>
+                  
+            </form>  
+          </li>
+
+          <li class="nav-item">
+            <form  action="/users/registerationPage" method="">
+              <button class="iddashbtn nav-link active shadow-none border-none" 
+                  id="" aria-current="page" type="submit">Register</button>
+              {% csrf_token %}
+            </form>  
+          </li>
+
+          {% if uemail %}
+          <li class="nav-item">
+            <form  action="/returnSubscriberDashboardPage" method="POST">
+              {% csrf_token %}
+              <button class="iddashbtn nav-link active shadow-none border-none" 
+                  id="" aria-current="page" type="submit">Subscriber</button>
+                  <input type="hidden" name="sub_uname" value="{{uemail}}" />
+                  <input type="hidden" name="sub_userid" value="{{userid}}" />
+            </form>  
+          </li>
+          {% endif %} 
 
 
+          <li class="nav-item">
+            <form  action="/users/loginPage" method="">
+              <button class="iddashbtn nav-link active shadow-none border-none" 
+                  id="" aria-current="page" type="submit">Login</button>
+              {% csrf_token %}
+            </form>  
+          </li>
+          
+          <li class="nav-item">
+            <button class="iddashbtn nav-link active shadow-none border-none" onclick="logout()"
+                id="" aria-current="page" >Logout</button>
+          </li>
 
-    <div class="container">
-      <div class="row justify-content-center">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <div class="collapse navbar-collapse" id="navbarScroll">
-            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-              
-              <li class="nav-item">
-                <form  action="/getDashboardPageonUserID" method="post">
-                  <button class="nav-link active shadow-none border-none" 
-                      id="iddashbtn" aria-current="page" type="submit">Dashboard</button>
-                  {% csrf_token %}
-                  <input type="hidden" name="dash_uname" value="{{uemail}}" />
-                  <input type="hidden" name="dash_userid" value="{{userid}}" />
-                </form>  
-              </li>
-
-              <li class="nav-item">
-                <form  action="/" method="get">
-                  <button class="nav-link active shadow-none border-none" 
-                      id="iddashbtn" aria-current="page" type="submit">Search on YouTube</button>
-                      
-                </form>  
-              </li>
-
-              <li class="nav-item">
-                <form  action="/users/registerationPage" method="">
-                  <button class="nav-link active shadow-none border-none" 
-                      id="iddashbtn" aria-current="page" type="submit">Register New User</button>
-                  {% csrf_token %}
-                </form>  
-              </li>
-
-              <li class="nav-item">
-                <form  action="/users/loginPage" method="">
-                  <button class="nav-link active shadow-none border-none" 
-                      id="iddashbtn" aria-current="page" type="submit">Login</button>
-                  {% csrf_token %}
-                </form>  
-              </li>
-
-              <li class="nav-item">
-                  <button class="nav-link active shadow-none border-none" 
-                      id="iddashbtn" aria-current="page" onclick="logout()" type="submit">Logout</button>
-                  {% csrf_token %}
-              </li>
-              
-
-            </ul>
-            <form class="d-flex">
-                <p class="btn btn-outline-success" type="submit">Welcome {{uemail}} !! </p>
-            </form> 
-          </div>
-        </div>
-      </nav>
+        </ul>
+         <div id="userheader">
+            <p class="btn btn-outline-success" type="submit">Welcome {{uemail}} !! </p>
+        </div>  
       </div>
     </div>
+  </nav>
+  </div>
+</div> 
+{% comment %} header section ends {% endcomment %}
+
 
 
 
@@ -108,14 +129,20 @@
       <input type="hidden"  id="userid" value="{{userid}}" />
     </div>
 
-    <div class="container">
 
-
-        <div class="row justify-content-center">
 
         <div class="container">
         <div class="row justify-content-center">
-          <div class="album py-5 bg-light">
+
+
+          <div class="container card rounded-top border border-danger" id="errorcnt"  >
+            <div class="card-body" id= "errorMessage">
+              {% comment %} <h1 class="text-center text-success">hello</h1>       {% endcomment %}
+            </div>
+          </div>
+
+
+          <div class="album py-5 bg-dark bg-gradient">
             <div class="main-container">
               <div class="row" id='userbased_Content'>
       
@@ -123,7 +150,7 @@
       
               </div>
             </div>
-          </div>
+          </div>          
         </div>
       </div>
       

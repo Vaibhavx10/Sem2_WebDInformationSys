@@ -13,6 +13,7 @@ import jwt
 from rest_framework.exceptions import AuthenticationFailed
 from searchingytvid.models import UsersSubscription
 from searchingytvid.serializers import userssubscriptionSerializers
+from users.serializers import UserSerializer
 from users.views import getUserDetails
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -283,29 +284,62 @@ def moreInfo(request):
     return render(request,'searchingytvid/moreInfo.html',passtoView)
 
 
+def returnSubscriberDashboardPage(request):
+    #jwttoken = request.POST['jwtcookie']
+    uemail = request.POST['sub_uname']
+    userid = request.POST['sub_userid']
+    passtoView = {
+            'jwtcookie':"dummy",
+            'uemail':uemail,
+            'userid':userid
+         }
+    return render(request, 'searchingytvid/subscribeddashboard.html',passtoView)         
+
+
 class addSubscriptionInDB(APIView):
     def post(self,request):
-        print(">> addSubscriptionInDB >> ",request)
-        print(">> addSubscriptionInDB >> ",request.data['imdbid'])
-        print(">> addSubscriptionInDB >> ",request.data['userid'])
-        
-        data = UsersSubscription.objects.filter(userid=request.data['userid'],imdbid=request.data['imdbid']) 
-        usrandimdbCount = userssubscriptionSerializers(data,many=True)
+        #Check if user is signed and jwt token is present 
+        token = request.COOKIES.get('jwtcookie')
 
-        print("addSubscriptionInDB >> ", len(usrandimdbCount.data))
+        if not token:
+            print('Unauthenticated User !!!')
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if len(usrandimdbCount.data) < 1:
-            serializer = userssubscriptionSerializers(data=request.data)
-            if serializer.is_valid():
-                serializer.is_valid(raise_exception=True)
-                print(serializer.errors)
-                serializer.save()
-                return Response(request.data, status=status.HTTP_200_OK)
+        try:
+            payload = jwt.decode(token,'secret',algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            print('Token Expired !!')   
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        print('payload :: ',payload['id'])
+        print('payload :: ',payload)
+
+
+        print(">> addSubscriptionInDB imdbid >> ",request.data['imdbid'])
+        print(">> addSubscriptionInDB userid >> ",request.data['userid']," payload >> ", payload['id'])
+        requserID = int(request.data['userid'])
+        jwtuserID = int(payload['id'])
+
+        if requserID == jwtuserID:
+            data = UsersSubscription.objects.filter(userid=request.data['userid'],imdbid=request.data['imdbid']) 
+            usrandimdbCount = userssubscriptionSerializers(data,many=True)
+            
+            if len(usrandimdbCount.data) < 1:
+                serializer = userssubscriptionSerializers(data=request.data)
+                if serializer.is_valid():
+                    serializer.is_valid(raise_exception=True)
+                    print(serializer.errors)
+                    serializer.save()
+                    return Response(request.data, status=status.HTTP_200_OK)
+                else:
+                        print("PRINTED ERROR ", serializer.errors)
+                        return Response(request.data, status=status.HTTP_404_NOT_FOUND)
             else:
-                print("PRINTED ERROR ", serializer.errors)
-                return Response(request.data, status=status.HTTP_200_OK)
+                 return Response(request.data, status=status.HTTP_404_NOT_FOUND)       
         else:
-             return Response(request.data, status=status.HTTP_404_NOT_FOUND)       
+            print("Difffret !! ")
+        
+        
         
 
 # using userId get list of imdbIDs which he has subscribed and from that list get
@@ -329,8 +363,8 @@ class deleteVideoEntry(APIView):
     def post(self,request):
         userid = request.data["userid"]
         deleteimdbID = request.data["deleteimdbID"]
-
-        deletethisVid = UsersSubscription.objects.filter(userid_id=userid,imdbid=deleteimdbID)
+        print("deleteVideoEntry | deleteimdbID >> ",deleteimdbID)
+        deletethisVid = UsersSubscription.objects.filter(imdbid=deleteimdbID)
         info = deletethisVid.delete()
         print(info)
         return Response("good",status=status.HTTP_200_OK)

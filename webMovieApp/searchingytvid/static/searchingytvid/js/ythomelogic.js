@@ -56,3 +56,7 @@ function displatytsearchresultfor_home(){
           )
 
 }
+
+function toggleNavbar(){
+    $("#navbarScroll").toggle(); 
+}
