@@ -1,4 +1,5 @@
 function subscribe(){
+  $('#errorcnt').hide();
     
 
     userid = $('#userid').val();
@@ -14,6 +15,10 @@ function subscribe(){
       "userid":$('#userid').val()
     };
 
+    document.getElementById("errorMessage").innerHTML = "";
+    var submitRes = document.getElementById("errorMessage");
+
+
     $.ajax({
         url: 'addSubscriptionInDB',
         async: false,
@@ -22,16 +27,23 @@ function subscribe(){
         data: infodata,
         success: function (data) {
             console.log(data)
-            alert(" >> "+data['uname'])
+            var res = `
+                 <h1 class="text-success" > You have Subscribed Please Check your registered email ID
+                 for download and streaming links <h1>`
+                submitRes.innerHTML = submitRes.innerHTML + res
+                $('#errorcnt').show();
           } , error: function () {
-            alert("error");
+            var res = `
+                 <h1 class="text-danger"> Failed To Subscribed <h1>
+                `
+                submitRes.innerHTML = submitRes.innerHTML + res
+                $('#errorcnt').show();
           }
         }
       )
 
+}
 
-
-
-
-
+function toggleNavbar(){
+  $("#navbarScroll").toggle(); 
 }

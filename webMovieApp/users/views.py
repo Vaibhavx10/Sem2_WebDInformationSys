@@ -38,7 +38,7 @@ class InsertRegisterationInfoToDB(APIView):
             return Response(request.data, status=status.HTTP_200_OK)
         else:
             print("PRINTED ERROR ", serializer.errors)
-            return Response(request.data, status=status.HTTP_200_OK)
+            return Response(request.data, status=status.HTTP_404_NOT_FOUND)
 
 
 

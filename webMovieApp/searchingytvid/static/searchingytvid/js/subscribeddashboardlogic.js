@@ -20,7 +20,7 @@ function initialize() {
         var videoContent = document.getElementById("userbased_Content");
 
           for (let i = 0; i < data.length; i++) {
-            console.log(data[i]) ;
+            console.log("imdbID "+data[i].imdbID+"Title "+data[i].Title) ;
             var setter = `  <div class="col-md-3">
             <div class="card text-center text-success fw-bold">
               <div class="card-body">
@@ -30,21 +30,21 @@ function initialize() {
             <div class="card mb-3 shadow-sm">
               <img class="bd-placeholder-img card-img-top" height="400px" src=${data[i].Poster} preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"></img>
               <div class="card-body">
-                <p class="font-monospace card-text text-center">Name : ${data[i].Title}</p>
-                <p class="font-monospace card-text col-md-10">Genres : ${data[i].Genre}</p>
+                <p class=" card-text text-center">Name : ${data[i].Title}</p>
+                <p class=" card-text col-md-10">Genres : ${data[i].Genre}</p>
                 <div class="row">
-                    <p class="font-monospace">Source ${data[i].Ratings[0].Source}</p>
-                    <p class="font-monospace">Value ${data[i].Ratings[0].Value}</p>
+                    <p class="">Source ${data[i].Ratings[0].Source}</p>
+                    <p class="">Value ${data[i].Ratings[0].Value}</p>
                 </div>
                 <div class="row">
-                    <p class="font-monospace">Country : ${data[i].Country}</p>
+                    <p class="">Country : ${data[i].Country}</p>
                 </div>
                 <div class="row">
-                    <p class="font-monospace">Type : ${data[i].Type}</p>
+                    <p class="">Type : ${data[i].Type}</p>
                 </div>
 
                 <div class="row">
-                    <p class="font-monospace">RunTime : ${data[i].Runtime} </p>
+                    <p class="">RunTime : ${data[i].Runtime} </p>
                 </div>
                 <input type="hidden" id="deleteimdbID" value=${data[i].imdbID} />
 
@@ -53,7 +53,7 @@ function initialize() {
                       <div class="col text-center">
                           <input type="hidden" name="ytsearch" value="${data[i].Title}" />
                               <div class="col btn-group">
-                                  <button onclick=removeVideo() class="btn btn-md btn-danger" type="submit"> DELETE </button>
+                                  <button onclick=removeVideo('${data[i].imdbID}') class="btn btn-md btn-danger" type="submit"> DELETE </button>
                               </div>
                       </div>
                     </div>
@@ -68,7 +68,7 @@ function initialize() {
           }
           
         } , error: function () {
-          alert("initialize error");
+          console.log("initialize error");
         }
       }
     )
@@ -83,15 +83,20 @@ function initialize() {
   }
 
 
-  function removeVideo(){
+  function removeVideo(imdbID){
+    
+    $('#errorcnt').hide();
     userid = $('#userid').val();
-    deleteimdbID = $('#deleteimdbID').val();
+    deleteimdbID = imdbID;
+    
     
     var passValue = {
       "userid":userid,
       "deleteimdbID":deleteimdbID
     }
-
+    
+    document.getElementById("errorMessage").innerHTML = "";
+    var submitRes = document.getElementById("errorMessage");
 
     $.ajax({
       url: '/deleteVideoEntry',
@@ -101,10 +106,22 @@ function initialize() {
       data:passValue,
       success: function (data) {
           console.log(data)
+          var res = `
+              <h1 class="text-center text-success">Video Deleted</h1> `
+                submitRes.innerHTML = submitRes.innerHTML + res
+                $('#errorcnt').show();
         } , error: function () {
-          alert("error");
+          var res = `
+                 <h1 class="text-center text-danger"> Failed To Delete <h1>
+                `
+                submitRes.innerHTML = submitRes.innerHTML + res
+                $('#errorcnt').show();
         }
       }
     )
 
   }
+
+  function toggleNavbar(){
+    $("#navbarScroll").toggle(); 
+}

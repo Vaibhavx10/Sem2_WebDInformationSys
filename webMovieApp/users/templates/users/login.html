@@ -4,23 +4,21 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- CSS CUSTOM -->
+    {% load static %}  
+    <link rel="stylesheet" href="{% static 'users/css/loginStyle.css' %}">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <title>Login Page</title>
   </head>
-  <body>
-    
-    <style type="text/css">
-      #loginauth{
-        display: none;
-      }
-    </style>
+  <body id="idbackgroudnImg" style="background-image: url('{% static "users/images/collagimg.jpg"%}')";>
 
 
     <form action="loginApi" method="post">
-      <div class="container card col-lg-6">
+      <div class="container card col-lg-6" id="idmaincontainer">
           <div class="row card-body">
             <h2 class="text-center"> Login Page </h2>
             <div class="input-group mb-3">
@@ -39,6 +37,7 @@
             <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
             <button type="Submit" class="btn btn-outline-primary" for="btnradio1">Submit</button>
         </div>
+
         
         <div class="container text-center" id="loginauth" style={{display}}>
           Just a check {{messages}}

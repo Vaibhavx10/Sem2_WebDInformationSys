@@ -1,12 +1,3 @@
-.checked {
-    color: orange;
-}
-
-#posterimage {
-    height: 450px;
-    width: 364px;
-}
-
 .iddashbtn {
     border: none;
     outline: none;
@@ -39,20 +30,16 @@
     font-family: 'Kaushan Script', cursive;
 }
 
-#moreInfoText{
-    font-size: 1.5rem;
-    margin-bottom: 0.8rem;
-    font-family: cursive;   
+#allvideosloop{
+    font-family: cursive;
+    font-weight: 100;
+    font-size: 1.3rem;
 }
 
-#btnsubmit{
-    margin-bottom: 30px;
+#idbackgroudnImg{
+    background-size:100%;
+    background-repeat: no-repeat;
+    background-position: top;
+    background-attachment: fixed;
 }
 
-
-#errorcnt {
-    display: none;
-    margin-top: 13px;
-    margin-bottom: 10px;
-    background-color: #323030;
-}
