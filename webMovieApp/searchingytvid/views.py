@@ -190,12 +190,12 @@ def moreInfo(request):
 
     passtoView = {
         'meta': getDataOnImdbID(imdbid),
-        'userID':userid,
+        'userid':userid,
         'uemail':uemail,
         'vidname':vidname
     }
 
-    print("moreInfo passtoView >> ",passtoView)
+    print("moreInfo passtoView >> ",userid)
     return render(request,'searchingytvid/moreInfo.html',passtoView)
 
 
@@ -203,6 +203,7 @@ def returnSubscriberDashboardPage(request):
     #jwttoken = request.POST['jwtcookie']
     uemail = request.POST['sub_uname']
     userid = request.POST['sub_userid']
+    print("returnSubscriberDashboardPage userid : "+userid)
     passtoView = {
             'jwtcookie':"dummy",
             'uemail':uemail,
