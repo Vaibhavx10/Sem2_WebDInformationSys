@@ -68,7 +68,7 @@ function initialize() {
           }
           
         } , error: function () {
-          alert("initialize error");
+          console.log("initialize error");
         }
       }
     )
@@ -111,7 +111,6 @@ function initialize() {
                 submitRes.innerHTML = submitRes.innerHTML + res
                 $('#errorcnt').show();
         } , error: function () {
-          alert("error");
           var res = `
                  <h1 class="text-center text-danger"> Failed To Delete <h1>
                 `

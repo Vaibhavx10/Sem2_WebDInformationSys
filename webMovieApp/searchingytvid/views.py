@@ -1,20 +1,12 @@
-import imp
-from lib2to3.pgen2 import token
-from contextlib import nullcontext
-from traceback import print_tb
-from webbrowser import get
 import requests
 from django.shortcuts import render
 from django.conf import settings
 from isodate import parse_duration
 from pprint import PrettyPrinter
-from django.views.decorators.csrf import csrf_protect
 import jwt
 from rest_framework.exceptions import AuthenticationFailed
 from searchingytvid.models import UsersSubscription
 from searchingytvid.serializers import userssubscriptionSerializers
-from users.serializers import UserSerializer
-from users.views import getUserDetails
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -30,12 +22,12 @@ from .models import UsersSubscription
 
 # For More info Refer http://www.omdbapi.com/
 
-def callingimdbAPI():
+def callingimdbAPI(searchquery):
     printer = PrettyPrinter()
 
     url = 'http://www.omdbapi.com/?apikey='+settings.OMDB_API_KEY
     year = ''
-    movietitle = 'Golmaal'
+    movietitle = searchquery
     inputData = {
         's':movietitle,
         'type':'movie',
@@ -91,9 +83,8 @@ def getYoutubeResultsOnSearch(ytsearch):
     print("\n \n fetchedresults >> ",fetchedresults)
 
     #Creating for loop to get all the video IDs
-    #Need to fix the nothing found error
+    
     for fr in fetchedresults:
-            #   if 'id' in fetchedresults:
                     listofVidIDs.append(fr['id'].get('videoId',''))
 
 
@@ -123,8 +114,6 @@ def getYoutubeResultsOnSearch(ytsearch):
 
         listofVidResult.append(v_dict)
 
-
-    print(" >> ",len(listofVidResult))
     if len(listofVidResult) > 1:
         passtoView = {
             'videos': listofVidResult
@@ -134,85 +123,11 @@ def getYoutubeResultsOnSearch(ytsearch):
             'videos': "FAIL"
         }
     return passtoView
-    
 
-
-
-# Create your views here.
 
 class displatytsearchresultfor_home(APIView):
     def post(self,request):    
         passtoView = getYoutubeResultsOnSearch(request.POST['ytsearch'])
-        
-        #if request.method == 'POST':
-        #     listofVidIDs = []
-        #     listofVidResult = []
-        #     yt_searching_url = 'https://www.googleapis.com/youtube/v3/search'
-        #     yt_videos_url = 'https://www.googleapis.com/youtube/v3/videos'
-
-
-        #     inputs = {
-        #         'part':'snippet',
-        #         'q':request.POST['ytsearch'],
-        #         'key' : settings.YT_API_KEY,
-        #         'safeSearch':'strict',
-        #         'maxResults':9
-        #     }
-
-
-
-        #     searchresults = requests.get(yt_searching_url,params=inputs)
-
-
-
-        #     fetchedresults = searchresults.json()['items']
-        #     print("\n \n fetchedresults >> ",fetchedresults)
-
-        #     #Creating for loop to get all the video IDs
-        #     #Need to fix the nothing found error
-        #     for fr in fetchedresults:
-        #             #   if 'id' in fetchedresults:
-        #                     listofVidIDs.append(fr['id'].get('videoId',''))
-
-
-
-
-
-        #     videos_input_param = {
-        #         'part':'snippet,contentDetails',
-        #         'key' : settings.YT_API_KEY,
-        #         'id' : ','.join(listofVidIDs),
-        #         'type':'video',
-        #         'maxResults':9
-        #     }
-
-        #     videosresults = requests.get(yt_videos_url,params=videos_input_param)
-
-        #     itemsofvideosresults = videosresults.json()['items']
-
-        #     for data in itemsofvideosresults:
-        #         v_dict = {
-        #             'title' : data['snippet']['title'],
-        #             'id': data['id'],
-        #             'url':f'https://www.youtube.com/watch?v={ data["id"] }',
-        #             'totaltimeinMinutes': parse_duration(data['contentDetails']['duration']).total_seconds() // 60,
-        #             'thumbnails':data['snippet']['thumbnails']['high']['url']
-        #         }
-
-        #         listofVidResult.append(v_dict)
-
-
-        # print(" >> ",len(listofVidResult))
-        # if len(listofVidResult) > 1:
-        #     passtoView = {
-        #         'videos': listofVidResult
-        #     }
-        # else:
-        #     passtoView = {
-        #         'videos': "FAIL"
-        #     }
-
-        #return render(request,'searchingytvid/home.html',passtoView)
         return Response(passtoView,status=status.HTTP_200_OK)
 
 def displatytsearchresult(request):
@@ -311,12 +226,6 @@ class addSubscriptionInDB(APIView):
             print('Token Expired !!')   
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        print('payload :: ',payload['id'])
-        print('payload :: ',payload)
-
-
-        print(">> addSubscriptionInDB imdbid >> ",request.data['imdbid'])
-        print(">> addSubscriptionInDB userid >> ",request.data['userid']," payload >> ", payload['id'])
         requserID = int(request.data['userid'])
         jwtuserID = int(payload['id'])
 
@@ -337,7 +246,7 @@ class addSubscriptionInDB(APIView):
             else:
                  return Response(request.data, status=status.HTTP_404_NOT_FOUND)       
         else:
-            print("Difffret !! ")
+            print("New Error !! ")
         
         
         
@@ -355,7 +264,6 @@ class getUserSubscribedData(APIView):
              imdbInfo = getDataOnImdbID(fr['imdbid'])
              listofsubscribedVideos.append(imdbInfo)
 
-        #imdbData=getDataOnImdbID(serializer.data[0]['imdbid'])
         return Response(listofsubscribedVideos,status=status.HTTP_200_OK)
 
 
@@ -366,6 +274,5 @@ class deleteVideoEntry(APIView):
         print("deleteVideoEntry | deleteimdbID >> ",deleteimdbID)
         deletethisVid = UsersSubscription.objects.filter(imdbid=deleteimdbID)
         info = deletethisVid.delete()
-        print(info)
-        return Response("good",status=status.HTTP_200_OK)
+        return Response(info,status=status.HTTP_200_OK)
 

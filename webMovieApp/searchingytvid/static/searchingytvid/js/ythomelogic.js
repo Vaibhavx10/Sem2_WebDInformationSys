@@ -50,7 +50,7 @@ function displatytsearchresultfor_home(){
 
 
               } , error: function () {
-                alert("error");
+                console.log("error");
               }
             }
           )

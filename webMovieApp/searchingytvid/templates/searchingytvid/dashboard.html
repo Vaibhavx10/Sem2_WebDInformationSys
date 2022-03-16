@@ -217,35 +217,6 @@
 
    
 
- 
-
-
-
-<script>
-
-    {% comment %} function searchOnYoutube(ytsearch){
-        $.ajax({
-            url: '/displatytsearchresult',
-            async: true,
-            dataType: 'json',        
-            type: 'POST',
-            data:{
-                  'ytsearch':ytsearch,
-                  'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function (data) {
-                alert(data)
-              } , error: function () {
-                alert("error");
-              }
-            }
-          )
-          
-          return false;
-    } {% endcomment %}
-
-
-  </script>
 
   
   <script>
